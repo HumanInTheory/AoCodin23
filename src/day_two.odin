@@ -73,3 +73,54 @@ day_two_part_one :: proc () {
 
     fmt.println(total)
 }
+
+day_two_part_two :: proc () {
+    total := 0
+
+    data, success := os.read_entire_file_from_filename("./res/day_two_input.txt")
+
+    if !success {
+        return // :(
+    }
+
+    text_data, error := strings.clone_from_bytes(data)
+
+    if error != .None {
+        return
+    }
+
+    for line in strings.split_lines_iterator(&text_data) {
+        red_max := 0
+        green_max := 0
+        blue_max := 0
+
+        split_line := strings.split(line, " ")
+
+        for i := 2; i < len(split_line); i += 2 {
+            switch(split_line[i + 1]) {
+                case "red":
+                    fallthrough
+                case "red,":
+                    fallthrough
+                case "red;":
+                    red_max = max(red_max, strconv.atoi(split_line[i]))
+                case "green":
+                    fallthrough
+                case "green,":
+                    fallthrough
+                case "green;":
+                    green_max = max(green_max, strconv.atoi(split_line[i]))
+                case "blue":
+                    fallthrough
+                case "blue,":
+                    fallthrough
+                case "blue;":
+                    blue_max = max(blue_max, strconv.atoi(split_line[i]))
+            }
+        }
+
+        total += red_max * green_max * blue_max
+    }
+
+    fmt.println(total)
+}
